@@ -1,7 +1,9 @@
+#gets the machine definition from file
 def getMachine(path):
     with open(path, 'r') as fptr:
         stream = fptr.read()
         return stream
+#machine reads string. do not use. implement this in driver instead
 def doString(string, machine):
     i = 0
     final = False
