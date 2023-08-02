@@ -1,42 +1,44 @@
-#this is the machine give it a list of State objects. the element is always the start state
-#
+
+"""this is the machine give it a list of State objects. the element is always the start state
+
+    members:
+        list: states is a list of State objects
+        run: is the current state. the first state is always the first object in states
+        
+"""
 
 class Machine:
     def __init__(self, states):
         self.states = states
-        self.run = states[0]
-        #machine reads char. returns tuple of direction and isfinal
+        self.run = self.states[0]
+        """this function lets machine read the character. 
+        returns: a tuple of (new current state, read direction)
+        """
     def read_char(self,char):
         delta = self.run.get_delta(char)
         self.run = next(state for state in self.states if delta[0] == state.label)
-        return (self.isFinal(),delta[1])
+        return (self.run,delta[1])
+        """returns if current state is a final state.
+        """
     def isFinal(self):
-        return self.run.accept()
-#this is a state in the machine. it should accept a tuple of (string, list, boolean)
-#its members are (label, deltas, finalstate?)
-#the second member is a list of tuples of (string, integer[-1,0,1], string). 
-# the members are (next state, direction,what to read)
+        return self.run.isFinal
+
+        """This class simulates a state in a machine
+
+        members:
+            string: label is the label of state
+            list: delta contains a list of tuples that represent the transitions
+            boolean: isFinal dictates if it is a final state
+        notes:
+            the list members are of the following types:
+                (string_literal, Number,string_literal)
+                they stand for (next state label, direction of read (-1 for left, 0 for stay, 1 for right), the character to read)
+        """
 class State:
     def __init__(self,state):
         self.label, self.delta, self.isFinal = state
+        """find a valid transition given character
+        """
     def get_delta(self,char):
-        return next(val for val in self.delta if self.delta[2] == char)
-    def accept(self):
-        return self.isFinal()
-from ast import literal_eval
-#this class parses the definition. initiate it with the stream of the file
-class MDParser:
-        stream = ""
-        lines = []
-        defs= []
-        def __init__(self,stream):  
-            self.stream = stream
-            self.parse()
-        def parse(self):
-            lines = self.stream.splitlines()  
-            self.lines = [literal_eval(strings) for strings in lines]
-            self.defs = [(elem[0],literal_eval(elem[1]),elem[2]) for elem in lines]
+        return next(val for val in self.delta if val[2] == char)
 
-def getStates(list_of_states):
-    states = [State(state) for state in list_of_states]
-    return states
