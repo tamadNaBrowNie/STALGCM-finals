@@ -1,20 +1,11 @@
-#gets the machine definition from file
+#gets the machine definition from file parses it into a list of tuples that will become state objects
 def getMachine(path):
     with open(path, 'r') as fptr:
         stream = fptr.read()
-        return stream
-#machine reads string. do not use. implement this in driver instead
-def doString(string, machine):
-    i = 0
-    final = False
-    while i < len(string) or not final :
-        if i  < 0:
-            return False
-        input = string[i]
-        flag= machine.read_char(input)
-        if flag != 1 or flag != 0 or flag != -1:
-            return False
-        final = machine.run.isFinal
-        i+=flag
-    return True
-        
+        return parse(stream)
+from ast import literal_eval
+#parses string to the internal machine definition
+def parse(stream):
+    lines = stream.splitlines()  
+    defs = [literal_eval(strings) for strings in lines]
+    return defs
